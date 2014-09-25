@@ -474,7 +474,7 @@ def split_and_fix_ff(inframes, inprefix='ff', outprefix='fc', badpixfile=None,
 
 #------------------------------------------------------------------------------
 
-def niri_sextractor(infiles, catformat='ascii'):
+def niri_sextractor(infiles, catformat='ldac'):
    """
    Runs SExtractor on the files that were produced by the split_and_fix_ff
     function.
@@ -508,10 +508,10 @@ def niri_sextractor(infiles, catformat='ascii'):
       hdr = pf.getheader(f)
       texp = hdr['coaddexp']
       ncoadd = hdr['coadds']
+      del hdr
 
       astrom.make_cat_niri(sciname,catname,regname,catformat=catformat,
-                           texp=texp,ncoadd=ncoadd,weight_file=whtname,
-                           weight_type='MAP_WEIGHT')
+                           texp=texp,ncoadd=ncoadd,weight_file=whtname)
 
 #------------------------------------------------------------------------------
 
