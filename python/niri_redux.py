@@ -508,10 +508,10 @@ def niri_sextractor(infiles, catformat='ldac'):
       hdr = pf.getheader(f)
       texp = hdr['coaddexp']
       ncoadd = hdr['coadds']
-      del hdr
 
       astrom.make_cat_niri(sciname,catname,regname,catformat=catformat,
-                           texp=texp,ncoadd=ncoadd,weight_file=whtname)
+                           texp=texp,ncoadd=ncoadd,whtfile=whtname,
+                           weight_type='MAP_WEIGHT')
 
 #------------------------------------------------------------------------------
 
@@ -644,7 +644,7 @@ def niri_photom(infiles, photocat, magcol, photzp=30., fixzp=None,
       print "Output catalog: %s" % outcat
       try:
          astrom.make_cat_niri(f,outcat,configfile=photconfig,texp=texp,
-                              ncoadd=ncoadd,weight_file=weightfile,zeropt=photzp,
+                              ncoadd=ncoadd,whtfile=weightfile,zeropt=photzp,
                               verbose=False)
       except:
          return
