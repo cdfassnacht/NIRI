@@ -21,7 +21,8 @@ if len(sys.argv)<3:
     print "       calib_3"
     print "       calib_4"
     print "       make_cats"
-    print "       scamp"
+    print "       scamp_1"
+    print "       scamp_2"
     print ""
     print "Example: python 1608_J_redux.py all calib_2"
     print ""
@@ -100,9 +101,14 @@ if redpass=='make_cats':
       fc_files.append('fc%d_sci.fits' % i)
    niri.niri_sextractor(fc_files)
 
-""" Run scamp on the files """
-if redpass=='scamp':
+""" Run first pass of scamp on the files """
+if redpass=='scamp_1':
    os.system('scamp fc*sci.cat -c scamp_niri_1608.config')
+
+""" If necessary, run second pass of scamp on the files """
+if redpass=='scamp_2':
+   addparam = '-ASTREFCAT_NAME swarp_median.cat'
+   os.system('scamp fc*sci.cat -c scamp_niri_1608.config %s' % addparam)
 
 #else:
 #   print ''

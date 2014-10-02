@@ -474,7 +474,7 @@ def split_and_fix_ff(inframes, inprefix='ff', outprefix='fc', badpixfile=None,
 
 #------------------------------------------------------------------------------
 
-def niri_sextractor(infiles, catformat='ldac'):
+def niri_sextractor(infiles, catformat='ldac', configfile='sext_niri.config'):
    """
    Runs SExtractor on the files that were produced by the split_and_fix_ff
     function.
