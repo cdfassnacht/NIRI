@@ -1,0 +1,7 @@
+#1608 photometry - based on 2MASS
+#  - NB: only two stars have good magnitudes
+#
+# Band   ZP
+#------ -----
+   J    24.02
+   Ks   
