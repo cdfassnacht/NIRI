@@ -40,10 +40,11 @@ tile = sys.argv[1]
 redpass = sys.argv[2]
 
 """ Set up variables that are not tile-dependent"""
-rawdir   = '../../Raw/2013_05_01/RXJ1131'
+rawdir   = '../../Raw/1131_J'
+caldir   = '../1608_calib'
 rawroot  = 'N20130501S0'
-flatfile = '../1131_calib/Flat_J.fits' 
-bpmfile  = '../1131_calib/Flat_J_bpm.pl'
+flatfile = '%s/Flat_J.fits' % caldir
+bpmfile  = '%s/Flat_J_bpm.pl' % caldir
 tilebpm  = 'bpm_from_sky.fits'
 astcat   = '1131_J_astrom.cat'
 finalout = '1131_niri_2012B_J.fits'
@@ -79,6 +80,12 @@ t3b_frames = n.arange(270,276)
 t3_frames  = n.concatenate((t3a_frames,t3b_frames))
 t4_frames  = n.arange(202,214)
 all_frames = n.concatenate((t1_frames,t2_frames,t3_frames,t4_frames))
+
+if tile=="all":
+   sci_frames = all_frames
+   outroot    = '1131_J'
+   ccdbfile   = 'ccmap_final.txt'
+   skybpm     = 'bpm_from_sky.fits'
 
 if tile=="Tile1":
    sci_frames = t1_frames
