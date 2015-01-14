@@ -14,8 +14,8 @@ from ccdredux import fixpix_wht
 if len(sys.argv)<3:
     print ""
     print "ERROR: 1131_J_redux.py requires two input parameters"
-    print "  1. Tile name.  "
-#    print "  1. Tile name.  For this data set (1131 J) the only option is 'all'"
+#    print "  1. Tile name.  "
+    print "  1. Tile name.  For this data set (1131 J) the only option is 'all'"
     print "  2. Reduction step.  The choices are:"
     print "       calib_1"
     print "       calib_2"
@@ -31,11 +31,11 @@ if len(sys.argv)<3:
     exit()
 
 tile = sys.argv[1]
-#if tile != 'all':
-#   print ""
-#   print "ERROR: Tile must have value 'all' for this system"
-#   print ""
-#   exit()
+if tile != 'all':
+   print ""
+   print "ERROR: Tile must have value 'all' for this system"
+   print ""
+   exit()
 
 redpass = sys.argv[2]
 
@@ -86,44 +86,6 @@ if tile=="all":
    outroot    = '1131_J'
    ccdbfile   = 'ccmap_final.txt'
    skybpm     = 'bpm_from_sky.fits'
-
-if tile=="Tile1":
-   sci_frames = t1_frames
-   ncoadd     = 10
-   outroot    = t1root
-   refroot    = 'ff281'
-   refcat     = '%s.cat' % refroot
-   ccdbfile   = 'ccmap_%s_as_ref.txt' % refroot
-if tile=="Tile4":
-   sci_frames = t4_frames
-   ncoadd     = 12
-   outroot    = t4root
-   refroot    = 'ff202'
-   refcat     = '%s.cat' % refroot
-   ccdbfile   = 'ccmap_%s_as_ref.txt' % refroot
-if tile=="all":
-   sci_frames = all_frames
-   outroot    = '1131_J_final'
-   ccdbfile   = 'ccmap_final.txt'
-if tile=="Tiles1and4":
-   sci_frames = n.arange(313,335)
-   skybpm     = 'bpm_from_sky.fits'
-   outroot    = '1131_J_tiles1and4'
-   t2refroot  = 'ff318'
-   t2refcat   = '%s.cat' % t2refroot
-   t2ccdbfile = 'ccmap_%s_as_ref.txt' % t2refroot
-   t3refroot  = 'ff260'
-   t3refcat   = '%s.cat' % t3refroot
-   t3ccdbfile = 'ccmap_%s_as_ref.txt' % t3refroot
-elif tile=="Tiles2and3":
-   skybpm     = 'bpm_from_sky.fits'
-   outroot    = '1131_J_tiles2and2'
-   t2refroot  = 'ff254'
-   t2refcat   = '%s.cat' % t2refroot
-   t2ccdbfile = 'ccmap_%s_as_ref.txt' % t2refroot
-   t3refroot  = 'ff260'
-   t3refcat   = '%s.cat' % t3refroot
-   t3ccdbfile = 'ccmap_%s_as_ref.txt' % t3refroot
 
 """ 
 Do the nonlinearity correction and create the sky file as the first pass 
