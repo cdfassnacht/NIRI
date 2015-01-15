@@ -26,7 +26,7 @@ if len(sys.argv)<3:
     print "       swarp"
     print "       scamp_2"
     print ""
-    print "Example: python 1608_J_redux.py all calib_2"
+    print "Example: python 1131_J_redux.py all calib_2"
     print ""
     exit()
 
@@ -41,7 +41,7 @@ redpass = sys.argv[2]
 
 """ Set up variables that are not tile-dependent"""
 rawdir   = '../../Raw/1131_J'
-caldir   = '../1608_calib'
+caldir   = '../1131_calib'
 rawroot  = 'N20130501S0'
 flatfile = '%s/Flat_J.fits' % caldir
 bpmfile  = '%s/Flat_J_bpm.pl' % caldir
@@ -59,9 +59,6 @@ Description of observation files:
  Tiles 2 and 3
    Observation date: 2013-05-01
    Frames:           347-368 (2 repetitions of 11 dithered pointings)
-                     Frames can be split into:
-                      2x5 frames for Tile 2 (254-258, 265-269)
-                      2x6 frames for Tile 3 (259-264, 270-275)
    Reference frames: 352
 """
 
@@ -71,15 +68,9 @@ t1root   = '1131_J_tile1'
 t2root   = '1131_J_tile2'
 t3root   = '1131_J_tile3'
 t4root   = '1131_J_tile4'
-t1_frames  = n.arange(281,291)
-t2a_frames = n.arange(254,259)
-t2b_frames = n.arange(265,270)
-t2_frames  = n.concatenate((t2a_frames,t2b_frames))
-t3a_frames = n.arange(259,265)
-t3b_frames = n.arange(270,276)
-t3_frames  = n.concatenate((t3a_frames,t3b_frames))
-t4_frames  = n.arange(202,214)
-all_frames = n.concatenate((t1_frames,t2_frames,t3_frames,t4_frames))
+t1and4_frames = n.arange(313,335)
+t2and3_frames = n.arange(347,369)
+all_frames = n.concatenate((t1and4_frames,t2and3_frames))
 
 if tile=="all":
    sci_frames = all_frames
@@ -121,7 +112,7 @@ if redpass=='make_cats':
    fc_files = []
    for i in sci_frames:
       fc_files.append('fc%d_sci.fits' % i)
-   niri.niri_sextractor(fc_files,catformat='ascii')
+   niri.niri_sextractor(fc_files,catformat='ldac')
 
 """
 Do the tile-based pass of the astrometry.

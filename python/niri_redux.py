@@ -184,6 +184,7 @@ def calib_1(sci_frames, rawroot, outroot, bpmfile, rawdir='.', obsdate=None,
    #print "%s" % npstring
    tmplc = '@%s' % lincorname
    tmpnp = '@%s' % npname
+   print tmplc, tmpnp
    iraf.nprepare(tmplc,outimages=tmpnp,bpm=bpmfile)
 
    """
