@@ -14,7 +14,6 @@ from ccdredux import fixpix_wht
 if len(sys.argv)<3:
     print ""
     print "ERROR: 1131_J_redux.py requires two input parameters"
-#    print "  1. Tile name.  "
     print "  1. Tile name.  For this data set (1131 J) the only option is 'all'"
     print "  2. Reduction step.  The choices are:"
     print "       calib_1"
