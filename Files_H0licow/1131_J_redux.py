@@ -23,6 +23,8 @@ if len(sys.argv)<3:
     print "       make_cats"
     print "       scamp"
     print "       swarp_1"
+    print "       final_wht"
+    print "       add_texp"
     print ""
     print "Example: python 1131_J_redux.py all calib_2"
     print ""
@@ -121,3 +123,14 @@ if redpass=='scamp':
 """ Run the first pass of swarp """
 if redpass=='swarp_1':
     os.system('swarp @good_frames_pass1.txt -c %s' % scampfile)
+
+""" 
+Create the final weight images by flagging pixels in the individual
+exposures that differ by more than 3 sigma from the median image.
+"""
+if redpass=='final_wht':
+    os.system('python ../make_wht_for_swarp_2.py swarp_median.fits 3.')
+
+""" Add the proper exposure time to the *resamp.fits files """
+if redpass=='add_texp':
+    print 'Not yet implemented'
