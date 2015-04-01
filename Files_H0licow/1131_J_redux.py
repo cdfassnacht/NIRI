@@ -9,7 +9,8 @@ import numpy as n
 import niri_redux as niri
 import astromatic as astrom
 import astrom_simple as astsimp
-from ccdredux import fixpix_wht
+from ccdredux import fixpix_wht,add_exptime
+import glob
 
 if len(sys.argv)<3:
     print ""
@@ -133,4 +134,7 @@ if redpass=='final_wht':
 
 """ Add the proper exposure time to the *resamp.fits files """
 if redpass=='add_texp':
-    print 'Not yet implemented'
+    inlist = glob.glob('*resamp.fits')
+    reffile = 'fc%d_sci.fits' % sci_frames[0]
+    ccd.add_exptime(inlist,reffile)
+
