@@ -21,9 +21,8 @@ if len(sys.argv)<3:
     print "       calib_3"
     print "       calib_4"
     print "       make_cats"
-    print "       scamp_1"
-    print "       swarp"
-    print "       scamp_2"
+    print "       scamp"
+    print "       swarp_1"
     print ""
     print "Example: python 1131_J_redux.py all calib_2"
     print ""
@@ -39,15 +38,16 @@ if tile != 'all':
 redpass = sys.argv[2]
 
 """ Set up variables that are not tile-dependent"""
-rawdir   = '../../Raw/1131_J'
-caldir   = '../1131_calib'
-rawroot  = 'N20130501S0'
-flatfile = '%s/Flat_J.fits' % caldir
-bpmfile  = '%s/Flat_J_bpm.pl' % caldir
-tilebpm  = 'bpm_from_sky.fits'
-astcat   = '1131_J_astrom.cat'
-scamp_1  = 'scamp_niri_1131.config'
-finalout = '1131_niri_2012B_J.fits'
+rawdir    = '../../Raw/1131_J'
+caldir    = '../1131_calib'
+rawroot   = 'N20130501S0'
+flatfile  = '%s/Flat_J.fits' % caldir
+bpmfile   = '%s/Flat_J_bpm.pl' % caldir
+tilebpm   = 'bpm_from_sky.fits'
+astcat    = '1131_J_astrom.cat'
+scampfile = 'scamp_niri_1131.config'
+sw1file   = 'swarp_niri_1131_1.config'
+finalout  = '1131_niri_2012B_J.fits'
 
 """
 Description of observation files:
@@ -114,6 +114,10 @@ if redpass=='make_cats':
       fc_files.append('fc%d_sci.fits' % i)
    niri.niri_sextractor(fc_files,catformat='ldac')
 
-""" Run scamp the first time """
-if redpass=='scamp_1':
-    os.system('scamp fc*sci.cat -c %s' % scamp_1)
+""" Run scamp """
+if redpass=='scamp':
+    os.system('scamp fc*sci.cat -c %s' % scampfile)
+
+""" Run the first pass of swarp """
+if redpass=='swarp_1':
+    os.system('swarp @good_frames_pass1.txt -c %s' % scampfile)
