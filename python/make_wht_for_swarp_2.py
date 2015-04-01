@@ -4,7 +4,7 @@ files are compared to the median-stacked images, and pixels that differ by
 more than n sigma from the median are flagged.
 """
 
-import niri_redux as niri
+import ccdredux as ccd
 import glob
 import sys
 
@@ -23,4 +23,4 @@ else:
     nsig = float(sys.argv[2])
     infiles = glob.glob('f*_sci.resamp.fits')
 
-    niri.make_wht_for_final(infiles,outname,nsig)
+    ccd.make_wht_for_final(infiles,outname,nsig)
