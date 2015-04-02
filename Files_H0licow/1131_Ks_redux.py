@@ -1,7 +1,7 @@
 """
-Code to calibrate and coadd NIRI J-band data for 1131
+Code to calibrate and coadd NIRI Ks-band data for 1131
 
-Usage: python 1131_J_redux.py [tile] [redux_step]
+Usage: python 1131_Ks_redux.py [tile] [redux_step]
 """
 
 import os,sys
@@ -14,13 +14,14 @@ import glob
 
 if len(sys.argv)<3:
     print ""
-    print "ERROR: 1131_J_redux.py requires two input parameters"
-    print "  1. Tile name.  For this data set (1131 J) the only option is 'all'"
+    print "ERROR: 1131_Ks_redux.py requires two input parameters"
+    print "  1. Tile name.  For this data set (1131 Ks) the only option is 'all'"
     print "  2. Reduction step.  The choices are:"
     print "       calib_1"
     print "       calib_2"
     print "       calib_3"
     print "       calib_4"
+    print "       fix_sky"
     print "       make_cats"
     print "       scamp"
     print "       swarp_1"
@@ -28,7 +29,7 @@ if len(sys.argv)<3:
     print "       add_texp"
     print "       swarp_final"
     print ""
-    print "Example: python 1131_J_redux.py all calib_2"
+    print "Example: python 1131_Ks_redux.py all calib_2"
     print ""
     exit()
 
@@ -42,44 +43,44 @@ if tile != 'all':
 redpass = sys.argv[2]
 
 """ Set up variables that are not tile-dependent"""
-rawdir    = '../../Raw/1131_J'
+rawdir    = '../../Raw/1131_Ks'
 caldir    = '../1131_calib'
 rawroot   = 'N20130501S0'
-flatfile  = '%s/Flat_J.fits' % caldir
-bpmfile   = '%s/Flat_J_bpm.pl' % caldir
+flatfile  = '%s/Flat_Ks.fits' % caldir
+bpmfile   = '%s/Flat_Ks_bpm.pl' % caldir
 tilebpm   = 'bpm_from_sky.fits'
-astcat    = '1131_J_astrom.cat'
+astcat    = '1131_Ks_astrom.cat'
 scampfile = 'scamp_niri_1131.config'
 sw1file   = 'swarp_niri_1131_1.config'
 sw2file   = 'swarp_niri_1131_2.config'
-finalout  = '1131_niri_2012B_J.fits'
+finalout  = '1131_niri_2012B_Ks.fits'
 
 """
 Description of observation files:
  Tiles 1 and 4
    Observation date: 2013-05-01
-   Junk frame:       312
-   Frames:           313-334 (2 repetitions of 11 dithered pointings)
+   Junk frame:       None
+   Frames:           335-345 (2 repetitions of 11 dithered pointings)
    Reference frame:  318
  Tiles 2 and 3
    Observation date: 2013-05-01
-   Frames:           347-368 (2 repetitions of 11 dithered pointings)
+   Frames:           369-379 (2 repetitions of 11 dithered pointings)
    Reference frames: 352
 """
 
 """ Set up the tile-dependent variables """
 skybpm     = None
-t1root   = '1131_J_tile1'
-t2root   = '1131_J_tile2'
-t3root   = '1131_J_tile3'
-t4root   = '1131_J_tile4'
-t1and4_frames = n.arange(313,335)
-t2and3_frames = n.arange(347,369)
+t1root   = '1131_Ks_tile1'
+t2root   = '1131_Ks_tile2'
+t3root   = '1131_Ks_tile3'
+t4root   = '1131_Ks_tile4'
+t1and4_frames = n.arange(335,346)
+t2and3_frames = n.arange(369,380)
 all_frames = n.concatenate((t1and4_frames,t2and3_frames))
 
 if tile=="all":
    sci_frames = all_frames
-   outroot    = '1131_J'
+   outroot    = '1131_Ks'
    ccdbfile   = 'ccmap_final.txt'
    skybpm     = 'bpm_from_sky.fits'
 
@@ -111,6 +112,46 @@ Prepare the files for running SExtractor
 """
 if redpass=='calib_4':
    niri.split_and_fix_ff(sci_frames,badpixfile=tilebpm,fixpix=True)
+
+"""
+For these Ks-band images, there needs to be a second sky flat correction
+round.  The patterns are different for the two sets tiles, so we
+need to treat them separately.
+"""
+if redpass=='fix_sky':
+    from ccdredux import median_combine,divide_images
+    """ First do tiles 1 and 4 """
+    fc1 = []
+    sf1 = []
+    tmp1 = []
+    for i in t1and4_frames:
+        infile = 'fc%d_sci.fits' % i
+        fc1.append(infile)
+        sf1.append(infile.replace('fc','sf'))
+        tmp1.append(infile.replace('fc','tmp'))
+    median_combine(fc1,'Skyflat_1.fits',normalize=True)
+    print ''
+    for i in range(len(fc1)):
+        divide_images(fc1[i],'Skyflat_1.fits',sf1[i],preserve_header=1)
+        os.rename(fc1[i],tmp1[i])
+        os.rename(sf1[i],fc1[i])
+        print '%s --> %s' % (sf1[i],fc1[i])
+    """ Then do tiles 2 and 3 """
+    fc2 = []
+    sf2 = []
+    tmp2 = []
+    for i in t2and3_frames:
+        infile = 'fc%d_sci.fits' % i
+        fc2.append(infile)
+        sf2.append(infile.replace('fc','sf'))
+        tmp2.append(infile.replace('fc','tmp'))
+    median_combine(fc2,'Skyflat_2.fits',normalize=True)
+    print ''
+    for i in range(len(fc2)):
+        divide_images(fc2[i],'Skyflat_2.fits',sf2[i],preserve_header=1)
+        os.rename(fc2[i],tmp2[i])
+        os.rename(sf2[i],fc2[i])
+        print '%s --> %s' % (sf2[i],fc2[i])
 
 """ Make the SExtractor catalogs """
 if redpass=='make_cats':
